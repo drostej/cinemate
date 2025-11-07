@@ -1,0 +1,74 @@
+/********************************************************************
+ * 🎬 Kino Backend (Spring Boot + Vue.js Frontend)
+ * - Monolith (Frontend + Backend in einer App)
+ * - JWT Authentication (stateless)
+ * - Liquibase automatisch aktiv (Tabellenerzeugung)
+ ********************************************************************/
+
+application {
+  config {
+    baseName cinebuddy
+    applicationType monolith
+    packageName de.cinebuddy
+    authenticationType jwt
+    buildTool gradle
+    clientFramework vue
+    serviceDiscoveryType no
+    enableHibernateCache false
+    clientFramework vue
+    devDatabaseType h2Disk
+    prodDatabaseType postgresql
+    databaseType sql
+    testFrameworks []
+  }
+  entities *
+}
+
+/********************************************************************
+ * 🧱 DOMAIN ENTITIES
+ ********************************************************************/
+entity Saal {
+  name String required maxlength(100)
+  kapazitaet Integer required min(1)
+}
+
+entity Sitzplatz {
+  reihe String required minlength(1) maxlength(1)
+  nummer Integer required
+}
+
+entity Vorfuehrung {
+  filmTitel String required maxlength(200)
+  datumZeit Instant required
+}
+
+entity Reservierung {
+  kundeName String required maxlength(100)
+  status ReservierungsStatus required
+}
+
+enum ReservierungsStatus {
+  OFFEN,
+  BEZAHLT,
+  STORNIERT
+}
+
+relationship OneToMany {
+  Saal{sitze} to Sitzplatz{saal(name)}
+}
+
+relationship OneToMany {
+  Saal{vorfuehrungen} to Vorfuehrung{saal(name)}
+}
+
+relationship OneToMany {
+  Vorfuehrung{reservierungen} to Reservierung{vorfuehrung(filmTitel)}
+}
+
+relationship ManyToMany {
+  Reservierung{plaetze} to Sitzplatz{reservierungen}
+}
+
+dto * with mapstruct
+service all with serviceClass
+paginate *  with no
