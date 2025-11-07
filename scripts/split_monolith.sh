@@ -5,13 +5,18 @@ echo "🚀 Generating JHipster monolith with Vue frontend..."
 jhipster import-jdl seeder.jdl --force --no-insight --skip-install
 
 echo "📁 Creating project structure: backend + frontend"
-mkdir -p ../cinebuddy-backend ../cinebuddy-frontend
+mkdir -p ../cinebuddy-backend/src/main ../cinebuddy-backend/src/test ../cinebuddy-frontend
 
 echo "📦 Moving backend files..."
 shopt -s extglob
+# Move everything except src/ and build/ to backend root
 mv !(src|build) ../cinebuddy-backend/
-mv src/main/!(webapp) ../cinebuddy-backend/src/main/
-mv src/test ../cinebuddy-backend/
+
+# Move Java + resources to backend/src/main
+mv src/main/!(webapp) ../cinebuddy-backend/src/main/ || true
+
+# Move test code
+[ -d src/test ] && mv src/test ../cinebuddy-backend/src/ || true
 shopt -u extglob
 
 echo "🎨 Extracting Vue frontend..."
