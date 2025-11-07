@@ -1,0 +1,42 @@
+{
+  "annotations": {
+    "changelogDate": "20251107171425"
+  },
+  "applications": ["cinebuddy"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "kundeName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "ReservierungsStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "OFFEN,BEZAHLT,STORNIERT"
+    }
+  ],
+  "name": "Reservierung",
+  "pagination": "no",
+  "relationships": [
+    {
+      "otherEntityName": "sitzplatz",
+      "otherEntityRelationshipName": "reservierungen",
+      "relationshipName": "plaetze",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityField": "filmTitel",
+      "otherEntityName": "vorfuehrung",
+      "otherEntityRelationshipName": "reservierungen",
+      "relationshipName": "vorfuehrung",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

@@ -1,0 +1,25 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "cinebuddy",
+    "buildTool": "gradle",
+    "clientFramework": "vue",
+    "creationTimestamp": 1762536040477,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "enableHibernateCache": false,
+    "entities": ["Saal", "Sitzplatz", "Vorfuehrung", "Reservierung"],
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "MWEwZWIzZDFjNGZlN2NhZGYzYWYzNzliMTVjZDA5NjA1Mjk0NTc1MGI3MjVmNWIwNzdhZjEzODg0NDA0NWUyMTlmNTJlZTAwNDIxYWM1ZGZkNzEwZjcyNWQ4YzgyMjRmNWZmNmQ5ZDNhMDQ4YzMzZjcyYmI3NDM2NDY4NDVlMjA=",
+    "languages": ["en"],
+    "lastLiquibaseTimestamp": 1762535665000,
+    "monorepository": true,
+    "nativeLanguage": "en",
+    "packageName": "de.cinebuddy",
+    "prodDatabaseType": "postgresql",
+    "serviceDiscoveryType": "no",
+    "skipCommitHook": true,
+    "testFrameworks": []
+  }
+}

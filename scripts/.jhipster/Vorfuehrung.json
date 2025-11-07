@@ -1,0 +1,41 @@
+{
+  "annotations": {
+    "changelogDate": "20251107171325"
+  },
+  "applications": ["cinebuddy"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "filmTitel",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "datumZeit",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Vorfuehrung",
+  "pagination": "no",
+  "relationships": [
+    {
+      "otherEntityName": "reservierung",
+      "otherEntityRelationshipName": "vorfuehrung",
+      "relationshipName": "reservierungen",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "saal",
+      "otherEntityRelationshipName": "vorfuehrungen",
+      "relationshipName": "saal",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

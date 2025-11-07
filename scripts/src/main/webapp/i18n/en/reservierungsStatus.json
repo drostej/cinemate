@@ -1,0 +1,10 @@
+{
+  "cinebuddyApp": {
+    "ReservierungsStatus": {
+      "null": "",
+      "OFFEN": "OFFEN",
+      "BEZAHLT": "BEZAHLT",
+      "STORNIERT": "STORNIERT"
+    }
+  }
+}

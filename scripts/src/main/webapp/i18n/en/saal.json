@@ -1,0 +1,27 @@
+{
+  "cinebuddyApp": {
+    "saal": {
+      "home": {
+        "title": "Saals",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Saal",
+        "createOrEditLabel": "Create or edit a Saal",
+        "notFound": "No Saals found"
+      },
+      "created": "A new Saal is created with identifier { param }",
+      "updated": "A Saal is updated with identifier { param }",
+      "deleted": "A Saal is deleted with identifier { param }",
+      "delete": {
+        "question": "Are you sure you want to delete Saal { id }?"
+      },
+      "detail": {
+        "title": "Saal"
+      },
+      "id": "ID",
+      "name": "Name",
+      "kapazitaet": "Kapazitaet",
+      "sitze": "Sitze",
+      "vorfuehrungen": "Vorfuehrungen"
+    }
+  }
+}

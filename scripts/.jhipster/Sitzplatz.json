@@ -1,0 +1,42 @@
+{
+  "annotations": {
+    "changelogDate": "20251107171225"
+  },
+  "applications": ["cinebuddy"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "reihe",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "1",
+      "fieldValidateRulesMinlength": "1"
+    },
+    {
+      "fieldName": "nummer",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Sitzplatz",
+  "pagination": "no",
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "saal",
+      "otherEntityRelationshipName": "sitze",
+      "relationshipName": "saal",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "reservierung",
+      "otherEntityRelationshipName": "plaetze",
+      "relationshipName": "reservierungen",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}
