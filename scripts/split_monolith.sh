@@ -1,44 +1,76 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-echo "🚀 Generating JHipster monolith with Vue frontend..."
-jhipster import-jdl seeder.jdl --force --no-insight --skip-install
+# === Configuration ===
+JDL_FILE="seeder.jdl"
+CACHE_DIR=".jhipster-cache"
+VUE_CACHE_DIR=".vue-cache"
+BACKEND_DIR="../backend"
+FRONTEND_DIR="../frontend"
+TEMPLATE_DIR="$(dirname "$0")/template"
+API_URL="http://localhost:8080"
 
-echo "📁 Creating project structure: backend + frontend"
-mkdir -p ../cinebuddy-backend/src/main ../cinebuddy-backend/src/test ../cinebuddy-frontend
+echo "🚀 Generating JHipster project inside cache directory..."
+rm -rf "$CACHE_DIR"
+mkdir -p "$CACHE_DIR"
+cp "$JDL_FILE" "$CACHE_DIR/"
+cd "$CACHE_DIR"
 
-echo "📦 Moving backend files..."
-shopt -s extglob
-# Move everything except src/ and build/ to backend root
-mv !(src|build) ../cinebuddy-backend/
+# === Generate JHipster project ===
+jhipster import-jdl "$JDL_FILE" --force --no-insight --skip-install
 
-# Move Java + resources to backend/src/main
-mv src/main/!(webapp) ../cinebuddy-backend/src/main/ || true
+echo "📁 Preparing clean project structure..."
+cd ..
+rm -rf "$BACKEND_DIR" "$FRONTEND_DIR"
+mkdir -p "$BACKEND_DIR/src/main" "$BACKEND_DIR/src/test" "$FRONTEND_DIR"
 
-# Move test code
-[ -d src/test ] && mv src/test ../cinebuddy-backend/src/ || true
-shopt -u extglob
+cd "$CACHE_DIR"
 
-echo "🎨 Extracting Vue frontend..."
-mv src/main/webapp ../cinebuddy-frontend/
+# === Backend extraction ===
+echo "📦 Moving backend (Java + Gradle) files..."
+mv gradlew gradlew.bat gradle settings.gradle build.gradle buildSrc ../$BACKEND_DIR/ 2>/dev/null || true
+mv src/main/java ../$BACKEND_DIR/src/main/ 2>/dev/null || true
+mv src/main/resources ../$BACKEND_DIR/src/main/ 2>/dev/null || true
+mv src/test ../$BACKEND_DIR/src/ 2>/dev/null || true
 
-cd ../cinebuddy-frontend
+echo "🧩 Copying properties and YAML configs..."
+find . -type f \( -name "*.properties" -o -name "*.yml" -o -name "*.yaml" \) -exec cp --parents {} ../$BACKEND_DIR/ \; 2>/dev/null || true
 
-# Initialize npm dependencies for the Vue frontend
-echo "📦 Installing Vue dependencies..."
-npm install
+# === Apply backend build template ===
+echo "🧩 Applying backend build template..."
+cp -f "$TEMPLATE_DIR/backend/"* ../$BACKEND_DIR/ 2>/dev/null || true
 
-echo "✅ Done!"
+# === Vue frontend creation ===
+echo "🎨 Creating fresh Vue 3 + Vite app..."
+rm -rf "../$VUE_CACHE_DIR"
+mkdir -p "../$VUE_CACHE_DIR"
+cd "../$VUE_CACHE_DIR"
+
+echo "⏳ Running create-vue non-interactively..."
+npx --yes create-vue@latest . -- --default --typescript --skip-git
+
+echo "📦 Moving generated Vue app into ../frontend..."
+rm -rf "../frontend" && mkdir -p "../frontend"
+cp -R . ../frontend/
+
+echo "🧩 Applying Vue template overrides..."
+cp -f "$TEMPLATE_DIR/vue/"* ../frontend/ 2>/dev/null || true
+
+cd ..
+rm -rf "$VUE_CACHE_DIR"
+
+# === Cleanup ===
+echo "🧹 Cleaning up cache..."
+rm -rf "$CACHE_DIR"
+
+echo "✅ Split complete!"
 echo
-echo "🧩 Project structure created:"
-echo "  - cinebuddy-backend/: Spring Boot + Gradle (run with './gradlew bootRun')"
-echo "  - cinebuddy-frontend/: Vue app (run with 'npm run serve')"
+echo "🧩 Project structure:"
+echo "  - $BACKEND_DIR/: Spring Boot backend (run with './gradlew bootRun')"
+echo "  - $FRONTEND_DIR/: Vue 3 + Vite frontend (run with 'npm run dev')"
 echo
-echo "💡 Tips:"
-echo "  1️⃣ Start the backend:"
-echo "     cd ../cinebuddy-backend && ./gradlew bootRun"
-echo "  2️⃣ Start the frontend:"
-echo "     cd ../cinebuddy-frontend && npm run serve"
-echo "  3️⃣ Access the app at:"
-echo "     👉 http://localhost:9000"
-
+echo "💡 Usage:"
+echo "  1️⃣ cd $BACKEND_DIR && ./gradlew bootRun"
+echo "  2️⃣ cd $FRONTEND_DIR && npm install && npm run dev"
+echo
+echo "🌐 Proxy ready: /api/* → $API_URL"
